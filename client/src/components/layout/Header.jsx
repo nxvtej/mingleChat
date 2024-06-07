@@ -1,38 +1,64 @@
+/* eslint-disable no-unused-vars */
 import {
 	AppBar,
 	Box,
+	Icon,
 	IconButton,
 	Toolbar,
 	Tooltip,
 	Typography,
 } from "@mui/material";
-import React from "react";
+import React, { Suspense, useState, lazy } from "react";
 import { orange } from "../../constants/color";
 import {
 	Add as AddIcon,
 	Menu as MenuIcon,
 	Search as SearchIcon,
 	Group as GroupIcon,
+	Logout as LogoutIcon,
+	Notifications as NotificationsIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
+const SearchDialog = lazy(() => import("../specific/Search"));
+const NotificationDialog = lazy(() => import("../specific/Notifications"));
+const NewGroupDialog = lazy(() => import("../specific/NewGroup"));
+
 const Header = () => {
+	/*
+creating dummy states while coding frontend
+*/
+
+	const [isMobile, setIsMobile] = useState(false);
+	const [isSearch, setIsSearch] = useState(false);
+	const [isNotification, setIsNotification] = useState(false);
+	const [isNewGroup, setIsNewGroup] = useState(false);
+
 	const navigate = useNavigate();
 
 	const handleMobile = () => {
 		console.log("mobile");
+		setIsMobile((prev) => !prev);
 	};
 
-	const openSearchDialog = () => {
+	const openSearch = () => {
+		setIsSearch((prev) => !prev);
 		console.log("search pressed");
 	};
 
 	const openNewGroup = () => {
+		setIsNewGroup((prev) => !prev);
+		console.log("this creates new group");
+	};
+
+	const openNotification = () => {
+		setIsNotification((prev) => !prev);
 		console.log("this creates new group");
 	};
 
 	const navigatToGroup = () => navigate("/groups");
 
+	const logoutHandler = () => {};
 	return (
 		<>
 			<Box sx={{ flexGrow: 1 }} height={"4rem"}>
@@ -67,39 +93,67 @@ const Header = () => {
 							}}
 						/>
 						<Box>
-							<Tooltip title='search'>
-								<IconButton
-									color='inherit'
-									size='large'
-									onClick={openSearchDialog}
-								>
-									<SearchIcon />
-								</IconButton>
-							</Tooltip>
+							<IconBtn
+								title='search'
+								icon={<SearchIcon />}
+								onClick={openSearch}
+							/>
+							<IconBtn
+								title='New Group'
+								icon={<AddIcon />}
+								onClick={openNewGroup}
+							/>
+							<IconBtn
+								title='Manage Group'
+								icon={<GroupIcon />}
+								onClick={navigatToGroup}
+							/>
 
-							<Tooltip title='New Group'>
-								<IconButton color='inherit' size='large' onClick={openNewGroup}>
-									<AddIcon />
-								</IconButton>
-							</Tooltip>
+							<IconBtn
+								title='Notifications'
+								icon={<NotificationsIcon />}
+								onClick={openNotification}
+							/>
 
-							<Tooltip title='Manage Groups'>
-								<IconButton
-									color='inherit'
-									size='large'
-									onClick={navigatToGroup}
-								>
-									<GroupIcon />
-								</IconButton>
-							</Tooltip>
+							<IconBtn
+								title='Logout'
+								icon={<LogoutIcon />}
+								onClick={logoutHandler}
+							/>
 						</Box>
 					</Toolbar>
 				</AppBar>
 			</Box>
+
+			{isSearch && (
+				<Suspense fallback={<div>Loading...</div>}>
+					<SearchDialog />
+				</Suspense>
+			)}
+
+			{isNotification && (
+				<Suspense fallback={<div>Loading...</div>}>
+					<NotificationDialog />
+				</Suspense>
+			)}
+
+			{isNewGroup && (
+				<Suspense fallback={<div>Loading...</div>}>
+					<NewGroupDialog />
+				</Suspense>
+			)}
 		</>
 	);
 };
 
 // instead of writing samme thing so many times creating a components for that
-// const IconBtn = ({})
+const IconBtn = ({ title, icon, onClick }) => {
+	return (
+		<Tooltip title={title}>
+			<IconButton color='inherit' size='large' onClick={onClick}>
+				{icon}
+			</IconButton>
+		</Tooltip>
+	);
+};
 export default Header;
