@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
-import { Grid, Skeleton } from "@mui/material";
+import { Grid, Skeleton, Stack } from "@mui/material";
 export const LayoutLoader = () => {
 	return (
 		<Grid container height={"calc(100vh - 4rem)"} spacing={"1rem"}>
@@ -17,9 +17,11 @@ export const LayoutLoader = () => {
 			</Grid>
 
 			<Grid item xs={12} sm={8} md={5} lg={6} height={"100%"}>
-				{Array.from({ length: 10 }).map((_, index) => (
-					<Skeleton key={index} variant='rectangular' height={"10rem"} />
-				))}
+				<Stack spacing={"1rem"}>
+					{Array.from({ length: 10 }).map((_, index) => (
+						<Skeleton key={index} variant='rectangular' height={"5rem"} />
+					))}
+				</Stack>
 			</Grid>
 
 			<Grid
@@ -28,8 +30,6 @@ export const LayoutLoader = () => {
 				lg={3}
 				sx={{
 					display: { xs: "none", sm: "block" },
-					padding: "2rem",
-					bgcolor: "rgba(0,0,0,0.5)",
 				}}
 				height={"100%"}
 			>
